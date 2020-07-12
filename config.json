@@ -1,0 +1,6 @@
+{
+    "task": [
+    ],
+    "web_root": "${ROOT}",
+    "listen": "${HOST}"
+}

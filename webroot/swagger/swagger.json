@@ -1,0 +1,144 @@
+{
+  "consumes": [
+    "multipart/form-data",
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Package MMCron Job API",
+    "version": "1.0.1"
+  },
+  "host": "API_HOST",
+  "basePath": "/",
+  "paths": {
+    "/add": {
+      "post": {
+        "description": "Add Cron Job",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "task",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "when to call job with crontab format, \neg: `second[0-60] minute[0-60] hour[0-23] day[1-31] dayOfMonth Month[1-12] dayOfWeek[0-6]`",
+            "name": "time",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "format": "textarea",
+            "description": "command line to run of the Job",
+            "name": "cmd",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/remove": {
+      "post": {
+        "description": "Remove Cron Job",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "task_id",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "task id of The Job",
+            "name": "id",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "description": "List All running Cron Job",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "task",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/task": {
+      "get": {
+        "description": "List All added Cron Job",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "taskList",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "ServiceResult": {
+      "schema": {
+        "type": "object"
+      },
+      "headers": {
+        "data": {},
+        "error": {
+          "type": "string"
+        },
+        "status": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
