@@ -55,6 +55,39 @@
         }
       }
     },
+    "/import": {
+      "post": {
+        "description": "import multiple task",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "tasks",
+        "parameters": [
+          {
+            "description": "request body",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Task"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
     "/remove": {
       "post": {
         "description": "Remove Cron Job",
@@ -123,6 +156,28 @@
           }
         }
       }
+    }
+  },
+  "definitions": {
+    "Task": {
+      "type": "object",
+      "required": [
+        "time",
+        "cmd"
+      ],
+      "properties": {
+        "cmd": {
+          "description": "Command Line Job",
+          "type": "string",
+          "x-go-name": "CMD"
+        },
+        "time": {
+          "description": "job time cron format",
+          "type": "string",
+          "x-go-name": "Time"
+        }
+      },
+      "x-go-package": "mm-cron/lib"
     }
   },
   "responses": {

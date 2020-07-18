@@ -100,7 +100,7 @@ var vm = new Vue({
                     minute: "*",
                     hour: "*",
                     day: "*",
-                    dom: "*",
+                    month: "*",
                     dow: "*"
                 }
             };

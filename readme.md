@@ -45,4 +45,4 @@ http://127.0.0.1:5566/ui/
 - 安装 [swagger-go](https://github.com/go-swagger/go-swagger)
 - 在项目目录执行
 ```bash
-swagger generate spec -o ./web_root/swagger/swagger.json
+swagger generate spec -o ./webroot/swagger/swagger.json

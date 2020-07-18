@@ -7,8 +7,15 @@ import (
 	"sync"
 )
 
+// swagger:model Task
 type Task struct {
+	// in:body
+	
+	// job time cron format
+	// required: true
 	Time string `json:"time"`
+	// Command Line Job
+	// required: true
 	CMD  string `json:"cmd"`
 }
 

@@ -36,6 +36,11 @@ type JobEntry struct {
 	ID  int      `json:"id"`
 }
 
+// swagger:parameters ImportBody
+type JSONBody struct {
+	Body []*Task
+}
+
 // swagger:response ServiceResult
 type ServiceResult struct {
 	Status bool        `json:"status"`
@@ -54,6 +59,7 @@ func (s *HTTPService) Start() *http.Server {
 	r.HandleFunc("/", s.RedirectUI)
 	r.HandleFunc("/add", s.AddTask)
 	r.HandleFunc("/remove", s.RemoveTask)
+	r.HandleFunc("/import", s.ImportTasks)
 	r.HandleFunc("/task", s.ListTask)
 	r.HandleFunc("/status", s.Status)
 	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/",
@@ -75,7 +81,7 @@ func (s *HTTPService) NotFoundHandle(writer http.ResponseWriter, request *http.R
 }
 
 func (s *HTTPService) RedirectUI(writer http.ResponseWriter, request *http.Request) {
-	http.Redirect(writer, request, "/sample/index.html", 301)
+	http.Redirect(writer, request, "/ui/index.html", 301)
 }
 
 func (s *HTTPService) ResponseError(err error, writer http.ResponseWriter, StatusCode int) {
@@ -148,6 +154,54 @@ func (s *HTTPService) AddTask(writer http.ResponseWriter, request *http.Request)
 	go s.SyncConfig()
 
 	s.Response(&ServiceResult{
+		Status: true,
+	}, writer)
+}
+
+// swagger:operation POST /import tasks
+//
+// import multiple task
+//
+// ---
+// consumes:
+//   - application/json
+// produces:
+//   - application/json
+// parameters:
+// - in: body
+//   name: body
+//   description: request body
+//   schema:
+//     type: array
+//     items:
+//	     "$ref": "#/definitions/Task"
+// responses:
+//   200:
+//     description: OK
+//   500:
+//     description: Error
+func (this *HTTPService) ImportTasks(writer http.ResponseWriter, request *http.Request) {
+	decoder := json.NewDecoder(request.Body)
+	var reqBody []*Task
+	err := decoder.Decode(&reqBody)
+	if err != nil {
+		Log.Error(err)
+		this.ResponseError(errors.New("decode request body error"), writer, 500)
+		return
+	}
+
+	for _, taskItem := range reqBody {
+		task := CmdTaskWrapper{Cmd: taskItem.CMD, Time: taskItem.Time}
+		err := jobrunner.Schedule(task.Time, task)
+		if err != nil {
+			Log.Error(err)
+			continue
+		}
+	}
+
+	go this.SyncConfig()
+
+	this.Response(&ServiceResult{
 		Status: true,
 	}, writer)
 }
@@ -225,6 +279,7 @@ func (s *HTTPService) ListTask(writer http.ResponseWriter, request *http.Request
 		Data:   jobList,
 	}, writer)
 }
+
 // swagger:operation GET /status task
 //
 // List All running Cron Job

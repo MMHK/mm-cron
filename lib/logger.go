@@ -4,11 +4,11 @@ import (
 	"github.com/op/go-logging"
 )
 
-var Log = logging.MustGetLogger("mmcron")
+var Log = logging.MustGetLogger("mm-cron")
 
 func init() {
 	format := logging.MustStringFormatter(
-		`ipa2s3 %{color} %{shortfunc} %{level:.4s} %{shortfile}
+		`mm-cron %{color} %{shortfunc} %{level:.4s} %{shortfile}
 %{id:03x}%{color:reset} %{message}`,
 	)
 	logging.SetFormatter(format)
