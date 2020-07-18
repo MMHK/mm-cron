@@ -38,7 +38,7 @@ COPY --from=builder /app/mm-cron/config.json .
  
 EXPOSE 3333
 
-ENTRYPOINT ["dumb-init"]
+ENTRYPOINT ["dumb-init", "--"]
 
 CMD envsubst < /app/config.json > /app/temp.json \
  && /app/mm-cron -c /app/temp.json
