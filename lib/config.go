@@ -4,6 +4,7 @@ package lib
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
 	"sync"
 )
 
@@ -34,6 +35,52 @@ func NewConfig(filename string) (err error, c *Config) {
 	c.sava_file = filename
 	err = c.load(filename)
 	return
+}
+
+func (this *Config) SaveTasks() (error) {
+	tasksConfigPath := filepath.Join(filepath.Dir(this.sava_file), "tasks.json")
+	var file *os.File
+	if _, err := os.Stat(tasksConfigPath); err != nil && os.IsNotExist(err) {
+		file, err = os.Create(tasksConfigPath)
+		if err != nil {
+			Log.Error(err)
+			return err
+		}
+		defer file.Close()
+	} else {
+		file, err = os.Open(tasksConfigPath)
+		if err != nil {
+			Log.Error(err)
+			return err
+		}
+		defer file.Close()
+	}
+	
+	encoder := json.NewEncoder(file)
+	encoder.SetIndent("", "   ")
+	err := encoder.Encode(this.Tasks)
+	if err != nil {
+		Log.Error(err)
+		return err
+	}
+	
+	return nil
+}
+
+func (this *Config) LoadTasks() (error) {
+	tasksConfigPath := filepath.Join(filepath.Dir(this.sava_file), "tasks.json")
+	if _, err := os.Stat(tasksConfigPath); err != nil && os.IsNotExist(err) {
+		return err
+	}
+	file, err := os.Open(tasksConfigPath)
+	if err != nil {
+		Log.Error(err)
+		return err
+	}
+	defer file.Close()
+	
+	decoder := json.NewDecoder(file)
+	return decoder.Decode(&this.Tasks)
 }
 
 func (c *Config) load(filename string) error {

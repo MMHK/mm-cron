@@ -21,6 +21,11 @@ func main() {
 		lib.Log.Error(err)
 		return
 	}
+	
+	err = conf.LoadTasks()
+	if err != nil {
+		lib.Log.Error(err)
+	}
 
 	cron := lib.NewCronTab(conf)
 

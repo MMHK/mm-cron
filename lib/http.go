@@ -108,7 +108,10 @@ func (s *HTTPService) SyncConfig() {
 
 	}
 	s.config.Tasks = task
-	s.config.Save()
+	err := s.config.SaveTasks()
+	if err != nil {
+		Log.Error(err)
+	}
 }
 
 // swagger:operation POST /add task
