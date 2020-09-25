@@ -36,7 +36,7 @@ COPY --from=builder /app/mm-cron/mm-cron .
 COPY --from=builder /app/mm-cron/webroot ./webroot
 COPY --from=builder /app/mm-cron/config.json .
  
-EXPOSE 3333
+EXPOSE 5566
 
 ENTRYPOINT ["dumb-init", "--"]
 
