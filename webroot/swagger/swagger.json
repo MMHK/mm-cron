@@ -27,7 +27,7 @@
         "produces": [
           "application/json"
         ],
-        "operationId": "task",
+        "operationId": "AddTask",
         "parameters": [
           {
             "type": "string",
@@ -55,6 +55,26 @@
         }
       }
     },
+    "/export": {
+      "get": {
+        "description": "export task list",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "ExportTask",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
     "/import": {
       "post": {
         "description": "import multiple task",
@@ -64,7 +84,7 @@
         "produces": [
           "application/json"
         ],
-        "operationId": "tasks",
+        "operationId": "ImportTask",
         "parameters": [
           {
             "description": "request body",
@@ -97,7 +117,7 @@
         "produces": [
           "application/json"
         ],
-        "operationId": "task_id",
+        "operationId": "RemoveTask",
         "parameters": [
           {
             "type": "string",
@@ -126,7 +146,7 @@
         "produces": [
           "application/json"
         ],
-        "operationId": "task",
+        "operationId": "taskStatus",
         "responses": {
           "200": {
             "description": "OK"

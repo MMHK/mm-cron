@@ -60,6 +60,7 @@ func (s *HTTPService) Start() *http.Server {
 	r.HandleFunc("/add", s.AddTask)
 	r.HandleFunc("/remove", s.RemoveTask)
 	r.HandleFunc("/import", s.ImportTasks)
+	r.HandleFunc("/export", s.ExportTasks)
 	r.HandleFunc("/task", s.ListTask)
 	r.HandleFunc("/status", s.Status)
 	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/",
@@ -91,6 +92,7 @@ func (s *HTTPService) ResponseError(err error, writer http.ResponseWriter, Statu
 }
 
 func (s *HTTPService) Response(out interface{}, writer http.ResponseWriter) {
+	writer.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(writer).Encode(out)
 }
 
@@ -114,7 +116,7 @@ func (s *HTTPService) SyncConfig() {
 	}
 }
 
-// swagger:operation POST /add task
+// swagger:operation POST /add AddTask
 //
 // Add Cron Job
 //
@@ -161,7 +163,7 @@ func (s *HTTPService) AddTask(writer http.ResponseWriter, request *http.Request)
 	}, writer)
 }
 
-// swagger:operation POST /import tasks
+// swagger:operation POST /import ImportTask
 //
 // import multiple task
 //
@@ -208,8 +210,27 @@ func (this *HTTPService) ImportTasks(writer http.ResponseWriter, request *http.R
 		Status: true,
 	}, writer)
 }
+// swagger:operation GET /export ExportTask
+//
+// export task list
+//
+// ---
+// consumes:
+//   - application/json
+// produces:
+//   - application/json
+// responses:
+//   200:
+//     description: OK
+//   500:
+//     description: Error
+func (this *HTTPService) ExportTasks(writer http.ResponseWriter, request *http.Request) {
+	writer.Header().Set("Content-Disposition", `attachment; filename="tasks.json"`)
+	this.Response(this.config.Tasks, writer)
+	return
+}
 
-// swagger:operation POST /remove task_id
+// swagger:operation POST /remove RemoveTask
 //
 // Remove Cron Job
 //
@@ -283,7 +304,7 @@ func (s *HTTPService) ListTask(writer http.ResponseWriter, request *http.Request
 	}, writer)
 }
 
-// swagger:operation GET /status task
+// swagger:operation GET /status taskStatus
 //
 // List All running Cron Job
 //
